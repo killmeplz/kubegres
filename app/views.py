@@ -1,8 +1,8 @@
-from app import app
 from flask import jsonify, request, abort
-from state import State
-from cluster import Cluster
 
+from app import app
+from cluster import Cluster
+from state import State
 
 state = State()
 cluster = Cluster(state)
@@ -54,6 +54,7 @@ def show_master():
 def demote_master():
     global cluster
     return jsonify(demoted=cluster.master_demote())
+
 
 @app.route('/failover')
 def failover():

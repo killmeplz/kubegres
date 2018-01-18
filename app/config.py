@@ -1,5 +1,4 @@
 class Config:
-
     FILE = '/tmp/state.json'
     USERNAME = 'hyperion'
     PASSWD = 'password'

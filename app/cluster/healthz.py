@@ -1,11 +1,14 @@
 from Queue import Queue
 from threading import Thread, Lock
+
+import psycopg2
+import time
+
 from clusterControl import clusterControl
-import psycopg2, time
+
 
 class HealthCheck(Thread):
-
-    def __init__(self,state,config):
+    def __init__(self, state, config):
         Thread.__init__(self)
         self.stateClass = state
         self.config = config
@@ -13,7 +16,7 @@ class HealthCheck(Thread):
     def load_state(self):
         self.state = self.stateClass.get()
 
-    def fill_queue(self,queue):
+    def fill_queue(self, queue):
         for key, _ in self.state.iteritems():
             queue.put(key)
         return queue
@@ -41,21 +44,19 @@ class HealthCheck(Thread):
 
 
 class Checker(Thread):
-
     def __init__(self, queue, parent, lock):
         Thread.__init__(self)
         self.lock = lock
         self.parentClass = parent
         self.queue = queue
 
-
     def run(self):
         server = self.queue.get()
         serv_state = self.connect(server, self.parentClass.state)
         self.queue.task_done()
-        self.commit_changes(server,serv_state)
+        self.commit_changes(server, serv_state)
 
-    def connect(self,server,data):
+    def connect(self, server, data):
         server_data = data[server]
         if not server_data.get('failed'):
             server_data.update({'failed': 0})
@@ -89,8 +90,8 @@ class Checker(Thread):
             server_data['failed'] += 1
             return server_data
 
-    def commit_changes(self,server,data):
+    def commit_changes(self, server, data):
         self.lock.acquire(1)
-        self.parentClass.state.update({server:data})
+        self.parentClass.state.update({server: data})
         self.parentClass.stateClass.set(self.parentClass.state)
         self.lock.release()

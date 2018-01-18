@@ -1,9 +1,8 @@
 class Cluster:
-
     def __init__(self, state):
         self.s = state
 
-    def cluster_create(self,master_hostname):
+    def cluster_create(self, master_hostname):
         if not self.check_cluster_exists():
             data = {
                 master_hostname: {
@@ -32,7 +31,6 @@ class Cluster:
             return True
         else:
             return False
-
 
     def master_demote(self):
         new_master = self.master_elect()
@@ -68,7 +66,7 @@ class Cluster:
         else:
             return False
 
-    def slave_add(self,hostname):
+    def slave_add(self, hostname):
         data = {
             hostname: {
                 'state': 'ready',
@@ -82,14 +80,12 @@ class Cluster:
         else:
             return False
 
-
-    def server_delete(self,server):
+    def server_delete(self, server):
         state = self.s.get()
         if not state.pop(server, False):
             return self.s.set(state)
         else:
             return False
-
 
     def slave_promote(self, slave):
         state = self.s.get()
@@ -102,11 +98,3 @@ class Cluster:
             return self.slave_promote(new_master)
         else:
             return False
-
-
-
-
-
-
-
-
