@@ -8,10 +8,6 @@ state = State()
 cluster = Cluster(state)
 
 
-def __init__():
-    print 'test'
-
-
 @app.route('/')
 @app.route('/index')
 def index():

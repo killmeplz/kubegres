@@ -29,9 +29,9 @@ class HealthCheck(Thread):
             th = [None] * len(self.state)
             state_lock = Lock()
             for i in range(len(th)):
-                th = Checker(queue, self, state_lock)
-                th.setDaemon(True)
-                th.start()
+                th[i] = Checker(queue, self, state_lock)
+                th[i].setDaemon(True)
+                th[i].start()
             self.fill_queue(queue)
             queue.join()
             res = clusterControl(self.stateClass)

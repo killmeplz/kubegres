@@ -6,3 +6,4 @@ local/
 tmp/
 pip-selfcheck.json
 *.pyc
+test.py
