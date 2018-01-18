@@ -1,14 +1,12 @@
-FROM postgres:9.6-alpine
-RUN apk add --update python py-pip
+FROM python:2.7-alpine3.7
 
-RUN pip install requests
+COPY ./app /app
+COPY ./server.py /
+COPY ./test.py /
+COPY ./requirements.txt /
 
+RUN pip install --no-cache-dir -r requirements.txt
 
-COPY ./main.py /main.py
+RUN touch /tmp/test.log
 
-RUN chmod 777 /main.py
-
-ADD ./init.sql /docker-entrypoint-initdb.d/ 
-RUN chmod 644 /docker-entrypoint-initdb.d/*
-
-CMD python /main.py
+CMD tail -f /tmp/test.log
