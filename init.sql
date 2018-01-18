@@ -1,0 +1,1 @@
+CREATE ROLE replication WITH REPLICATION PASSWORD 'password' LOGIN

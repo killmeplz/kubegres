@@ -1,0 +1,7 @@
+lib/
+bin/
+include/
+.idea/
+local/
+tmp/
+pip-selfcheck.json
