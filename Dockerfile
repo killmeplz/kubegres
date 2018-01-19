@@ -9,6 +9,4 @@ COPY ./requirements.txt /
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN touch /tmp/test.log
-
-CMD tail -f /tmp/test.log
+CMD python /server.py

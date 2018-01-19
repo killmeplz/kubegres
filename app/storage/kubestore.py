@@ -12,7 +12,7 @@ class KubeState:
 
     def __init__(self):
         config.load_incluster_config()
-        self.namespace = os.getenv('KEY_THAT_MIGHT_EXIST', 'ott')
+        self.namespace = os.getenv('NAMESPACE', 'ott')
         self.cname = 'postgres-cluster-state'
 
     def get(self):

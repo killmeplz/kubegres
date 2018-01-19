@@ -9,7 +9,7 @@ class Starter:
     pg_dir = '/var/lib/postgresql/9.6/main/'
     recovery_file = 'recovery.conf'
     rep_passwd = 'password'
-    server_addr = 'http://10.126.8.137:5000'
+    server_addr = 'http://pg-control-svc:5000'
 
     #####
     # Init file for configuring cluster
@@ -20,7 +20,7 @@ class Starter:
             r = requests.get(self.server_addr + url)
             return r.json()
         elif method == 'POST':
-            data = {'hostname': socket.gethostname()}
+            data = {'hostname': socket.gethostname()+'.postgresql-cluster'}
             r = requests.post(self.server_addr + url, json=data)
             return r.json()
 

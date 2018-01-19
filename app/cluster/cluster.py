@@ -14,6 +14,7 @@ class Cluster:
             }
             list = {}
             list.update(data)
+            KubeFailOver().add_master_label(master_hostname)
             return self.s.set(list)
         else:
             return False
