@@ -1,3 +1,5 @@
+from kubefailover import KubeFailOver
+
 class Cluster:
     def __init__(self, state):
         self.s = state
@@ -89,12 +91,15 @@ class Cluster:
 
     def slave_promote(self, slave):
         state = self.s.get()
-        state[slave]['role'] = 'master'
+        state[slave]['role'] = 'master' if KubeFailOver().slave_promote(slave) else False
         return self.s.set(state)
 
     def failover(self):
         new_master = self.master_elect()
+        old_master = self.master_show()
         if self.master_demote():
-            return self.slave_promote(new_master)
+            self.slave_promote(new_master)
+            KubeFailOver().master_demote(old_master[0])
+            return True
         else:
             return False

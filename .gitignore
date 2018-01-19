@@ -7,3 +7,8 @@ tmp/
 pip-selfcheck.json
 *.pyc
 test.py
+
+
+
+#TEMPORARILY
+.kube/
