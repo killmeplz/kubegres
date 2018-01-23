@@ -26,7 +26,7 @@ class HealthCheck(Thread):
             time.sleep(5)
             self.load_state()
             if not self.state:
-                print 'No servers'
+                print('No servers')
                 continue
             queue = Queue()
             th = [None] * len(self.state)
@@ -39,8 +39,8 @@ class HealthCheck(Thread):
             queue.join()
             res = clusterControl(self.stateClass)
             if res:
-                print res
-            print self.state
+                print(res)
+            print(self.state)
 
 
 class Checker(Thread):

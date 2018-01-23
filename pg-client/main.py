@@ -33,6 +33,8 @@ class Starter:
             self.start_slave_pg()
         elif res['response'] == 2:
             self.start_postgres()
+        else:
+            print(res)
 
     def start_slave_pg(self):
 

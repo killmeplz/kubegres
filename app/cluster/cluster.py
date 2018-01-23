@@ -14,7 +14,7 @@ class Cluster:
             }
             list = {}
             list.update(data)
-            KubeFailOver().add_master_label(master_hostname)
+            KubeFailOver().add_master_label(master_hostname.split('.',1)[0])
             return self.s.set(list)
         else:
             return False
@@ -92,7 +92,7 @@ class Cluster:
 
     def slave_promote(self, slave):
         state = self.s.get()
-        state[slave]['role'] = 'master' if KubeFailOver().slave_promote(slave) else False
+        state[slave]['role'] = 'master' if KubeFailOver().slave_promote(slave.split('.',1)[0]) else False
         return self.s.set(state)
 
     def failover(self):
@@ -100,7 +100,7 @@ class Cluster:
         old_master = self.master_show()
         if self.master_demote():
             self.slave_promote(new_master)
-            KubeFailOver().master_demote(old_master[0])
+            KubeFailOver().master_demote(old_master[0].split('.',1)[0])
             return True
         else:
             return False
