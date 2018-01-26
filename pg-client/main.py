@@ -25,11 +25,14 @@ class Starter:
             return r.json()
 
     def __init__(self):
-
         res = self.connect('POST', '/cluster/check')
         if res['response'] == 0:
             self.create_cluster()
         elif res['response'] == 1:
+            try:
+                os.makedirs(self.pg_dir)
+            except OSError:
+                pass
             self.start_slave_pg()
         elif res['response'] == 2:
             self.start_postgres()
@@ -42,6 +45,8 @@ class Starter:
         if not ip:
             return False
         self.sysexec('rm -Rf ' + self.pg_dir + '*')
+        self.sysexec('chown -R postgres ' + self.pg_dir)
+        self.sysexec('chmod -R 700 ' +self.pg_dir)
         self.sysexec('su postgres -c "pg_basebackup -h ' + str(
             ip[0]) + ' -D ' + self.pg_dir + ' -P -U replication --xlog-method=stream"')
         self.slave_cfg_gen(ip[0])
@@ -79,7 +84,9 @@ class Starter:
             'PATH': '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
         }
         # os.execve('/bin/su',['postgres','-c',"postgres -c config_file=/etc/postgresql/postgresql.conf"],env)
-        subprocess.Popen('su postgres -c "postgres -c config_file=/etc/postgresql/postgresql.conf"', shell=True)
+        #proc = subprocess.Popen('su postgres -c "postgres -c config_file=/etc/postgresql/postgresql.conf"', shell=True)
+        #proc.wait()
+        self.sysexec('su postgres -c "postgres -c config_file=/etc/postgresql/postgresql.conf"')
         # os.system('su postgres -c postgres -c config_file=/etc/postgresql/postgresql.conf')
         return True
 

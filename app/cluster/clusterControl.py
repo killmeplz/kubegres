@@ -1,9 +1,6 @@
-from cluster import Cluster
-
-
 class clusterControl():
-    def __init__(self, state):
-        self.cluster = Cluster(state)
+    def __init__(self, cluster):
+        self.cluster = cluster
         self.check(self.cluster)
 
     def check(self, cluster):

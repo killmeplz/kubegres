@@ -5,6 +5,7 @@ import psycopg2
 import time
 
 from clusterControl import clusterControl
+from cluster import Cluster
 
 
 class HealthCheck(Thread):
@@ -23,7 +24,7 @@ class HealthCheck(Thread):
 
     def run(self):
         while True:
-            time.sleep(5)
+            time.sleep(30)
             self.load_state()
             if not self.state:
                 print('No servers')
@@ -32,12 +33,12 @@ class HealthCheck(Thread):
             th = [None] * len(self.state)
             state_lock = Lock()
             for i in range(len(th)):
-                th[i] = Checker(queue, self, state_lock)
+                th[i] = Checker( queue=queue , parent=self , lock=state_lock )
                 th[i].setDaemon(True)
                 th[i].start()
             self.fill_queue(queue)
             queue.join()
-            res = clusterControl(self.stateClass)
+            res = clusterControl(Cluster( state=self.stateClass, config=self.config ))
             if res:
                 print(res)
             print(self.state)

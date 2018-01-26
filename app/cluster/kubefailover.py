@@ -4,9 +4,11 @@ from kubernetes.client.apis import core_v1_api
 from kubernetes.stream import stream
 from kubernetes.client.rest import ApiException
 
+
 class KubeFailOver():
 
-    def __init__(self):
+    def __init__(self,appConfig):
+        self.appConfig = appConfig
         config.load_incluster_config()
         self.api = core_v1_api.CoreV1Api()
 
@@ -35,7 +37,7 @@ class KubeFailOver():
     def label_manage(self,pod,body):
         api_instance = kubernetes.client.CoreV1Api(kubernetes.client.ApiClient())
         try:
-            api_instance.patch_namespaced_pod(pod, 'ott', body, pretty='true')
+            api_instance.patch_namespaced_pod(pod, self.appConfig.NAMESPACE , body, pretty='true')
             return True
         except ApiException as e:
             print("Exception when calling CoreV1Api->patch_namespaced_pod: %s\n" % e)
@@ -49,7 +51,7 @@ class KubeFailOver():
 
 
     def pod_exec(self,pod,command):
-        resp = stream(self.api.connect_get_namespaced_pod_exec, pod, 'ott',
+        resp = stream(self.api.connect_get_namespaced_pod_exec, pod, self.appConfig.NAMESPACE,
                       command=command,
                       stderr=True, stdin=False,
                       stdout=True, tty=False)

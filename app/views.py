@@ -3,9 +3,11 @@ from flask import jsonify, request, abort
 from app import app
 from cluster import Cluster
 from state import State
+from config import Config
 
 state = State()
-cluster = Cluster(state)
+cluster = Cluster(state, Config)
+
 
 
 @app.route('/')
